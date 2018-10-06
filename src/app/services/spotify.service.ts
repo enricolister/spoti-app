@@ -7,9 +7,13 @@ import { Observable } from 'rxjs';
 })
 export class SpotifyService {
 
+  token: string;
+
   constructor( private http: HttpClient) {
     console.log('Spotify Service ready.');
+    this.getToken();
   }
+
 
   getToken() {
     const body = new HttpParams()
@@ -25,16 +29,19 @@ export class SpotifyService {
 
     this.http.post('https://accounts.spotify.com/api/token', body.toString(), httpOptions)
     .subscribe( (data: any) => {
-      console.log(data.access_token);
-      return data.access_token;
+      this.token = data.access_token;
+      // console.log(this.token);
     });
   }
 
   getNewRelases() {
+    setTimeout(() => {
+    console.log('Token che usero ' + this.token);
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.getToken()
+      'Authorization': 'Bearer ' + this.token
     });
+      return this.http.get('https://api.spotify.com/v1/browse/new-releases', { headers });
+    }, 1000);
 
-    return this.http.get('https://api.spotify.com/v1/browse/new-releases', { headers });
   }
 }
