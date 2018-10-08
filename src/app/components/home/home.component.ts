@@ -9,20 +9,27 @@ import { SpotifyService } from '../../services/spotify.service';
 })
 export class HomeComponent implements OnInit {
 
-  token;
+  public static token;
   nuevasCanciones: any[] = [];
 
   constructor( private spotify: SpotifyService ) {
-    this.spotify.getToken()
-    .subscribe( (data: any) => {
-      this.token = data.access_token;
-
-      this.spotify.getNewRelases(this.token)
-    .subscribe( (data2: any) => {
-      console.log(data2.albums.items);
-      this.nuevasCanciones = data2.albums.items;
-    });
-    });
+    if (HomeComponent.token === undefined) {
+      this.spotify.getToken()
+      .subscribe( (data: any) => {
+        HomeComponent.token = data.access_token;
+        this.spotify.getNewRelases(HomeComponent.token)
+      .subscribe( (data2: any) => {
+        console.log(data2.albums.items);
+        this.nuevasCanciones = data2.albums.items;
+      });
+      });
+    } else {
+      this.spotify.getNewRelases(HomeComponent.token)
+      .subscribe( (data2: any) => {
+        console.log(data2.albums.items);
+        this.nuevasCanciones = data2.albums.items;
+      });
+    }
   }
 
   ngOnInit() {
