@@ -13,23 +13,23 @@ export class HomeComponent implements OnInit {
   nuevasCanciones: any[] = [];
 
   constructor( private spotify: SpotifyService ) {
+
     if (HomeComponent.token === undefined) {
       this.spotify.getToken()
       .subscribe( (data: any) => {
         HomeComponent.token = data.access_token;
         this.spotify.getNewRelases(HomeComponent.token)
       .subscribe( (data2: any) => {
-        console.log(data2.albums.items);
-        this.nuevasCanciones = data2.albums.items;
+        this.nuevasCanciones = data2;
       });
       });
     } else {
       this.spotify.getNewRelases(HomeComponent.token)
-      .subscribe( (data2: any) => {
-        console.log(data2.albums.items);
-        this.nuevasCanciones = data2.albums.items;
+      .subscribe( (data: any) => {
+        this.nuevasCanciones = data;
       });
     }
+
   }
 
   ngOnInit() {

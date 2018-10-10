@@ -13,6 +13,13 @@ export class SpotifyService {
     this.getToken();
   }
 
+  getQuery ( query: string, token ) {
+    const url = `https://api.spotify.com/v1/${ query }`;
+    const headers = new HttpHeaders({
+          'Authorization': 'Bearer ' + token
+        });
+        return this.http.get(url, { headers });
+  }
 
   getToken() {
     const body = new HttpParams()
@@ -31,16 +38,10 @@ export class SpotifyService {
   }
 
   getNewRelases(token) {
-        const headers = new HttpHeaders({
-          'Authorization': 'Bearer ' + token
-        });
-        return this.http.get('https://api.spotify.com/v1/browse/new-releases', { headers });
+    return this.getQuery('browse/new-releases?limit=20', token).pipe( map( data => data['albums'].items ));
   }
 
   getArtista(termino: string, token) {
-    const headers = new HttpHeaders({
-          'Authorization': 'Bearer ' + token
-        });
-        return this.http.get('https://api.spotify.com/v1/search?q=' + termino + '&type=artist&limit=15', { headers });
+    return this.getQuery(`search?q=${ termino }&type=artist&limit=15`, token).pipe( map( data => data['artists'].items ));
   }
 }
