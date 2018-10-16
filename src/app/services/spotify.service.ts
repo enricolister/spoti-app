@@ -41,7 +41,11 @@ export class SpotifyService {
     return this.getQuery('browse/new-releases?limit=20', token).pipe( map( data => data['albums'].items ));
   }
 
-  getArtista(termino: string, token) {
+  getArtistas(termino: string, token) {
     return this.getQuery(`search?q=${ termino }&type=artist&limit=15`, token).pipe( map( data => data['artists'].items ));
+  }
+
+  getArtista(id: string, token) {
+    return this.getQuery(`artists/${ id }`, token);
   }
 }
