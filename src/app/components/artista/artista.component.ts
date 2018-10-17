@@ -11,6 +11,7 @@ import { HomeComponent } from '../../components/home/home.component';
 export class ArtistaComponent {
 
   artista: any = {};
+  topTracks: any[] = [];
   loading: boolean;
 
   constructor(private router: ActivatedRoute,
@@ -27,20 +28,30 @@ export class ArtistaComponent {
 
         this.router.params.subscribe( params => {
         this.getArtista(params.id, HomeComponent.token);
+        this.getTopTracks(params.id, HomeComponent.token);
       });
       });
     } else {
       this.router.params.subscribe( params => {
       this.getArtista(params.id, HomeComponent.token);
+      this.getTopTracks(params.id, HomeComponent.token);
       });
     }
   }
 
   getArtista(id: string, token) {
-    console.log(token);
+    // console.log(token);
     this.spotify.getArtista(id, token).subscribe( artista => {
       this.loading = false;
       this.artista = artista;
+    });
+  }
+
+  getTopTracks(id: string, token) {
+    this.spotify.getTopTracks(id, token)
+    .subscribe(topTracks => {
+      console.log(topTracks);
+      this.topTracks = topTracks;
     });
   }
 
