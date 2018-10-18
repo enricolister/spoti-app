@@ -38,8 +38,9 @@
           <td>{{ track.album.name }}</td>
           <td>{{ track.name }}</td>
           <td>
-            <audio *ngIf="track.preview_url != null" [src]="track.preview_url" controls></audio>
-            <span *ngIf="track.preview_url == null">Vista previa no disponible</span>
+<!--            <audio *ngIf="track.preview_url != null" [src]="track.preview_url" controls></audio>-->
+            <iframe [src]="track.uri | domseguro : 'https://open.spotify.com/embed?uri='" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            <span *ngIf="track.uri == null">Vista previa no disponible</span>
           </td>
         </tr>
       </tbody>
