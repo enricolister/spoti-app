@@ -12,10 +12,13 @@ export class HomeComponent implements OnInit {
   public static token;
   nuevasCanciones: any[] = [];
   loading: boolean;
+  error: boolean;
+  errorMessage: string;
 
   constructor( private spotify: SpotifyService ) {
 
     this.loading = true;
+    this.error = false;
 
     if (HomeComponent.token === undefined) {
       this.spotify.getToken()
@@ -26,12 +29,20 @@ export class HomeComponent implements OnInit {
         this.nuevasCanciones = data2;
           this.loading = false;
       });
+      }, ( errorResponse ) => {
+        this.error = true;
+        this.loading = false;
+        this.errorMessage = errorResponse.error.error;
       });
     } else {
       this.spotify.getNewRelases(HomeComponent.token)
       .subscribe( (data: any) => {
         this.nuevasCanciones = data;
         this.loading = false;
+      }, ( errorResponse ) => {
+        this.error = true;
+        this.loading = false;
+        this.errorMessage = errorResponse.error.error;
       });
     }
 
